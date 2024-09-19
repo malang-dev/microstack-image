@@ -40,6 +40,7 @@ jobs:
             KERNEL_VERSION=${{ matrix.kernel.version }}
             KERNEL_CONFIG=${{ matrix.kernel.config }}
           push: true
+          provenance: false
           tags: ghcr.io/malang-dev/microstack-kernel:${{ matrix.kernel.version }}
 
   build-amazon:
@@ -67,4 +68,5 @@ jobs:
           context: ./kernel
           file: ./kernel/Dockerfile.amazon
           push: true
+          provenance: false
           tags: ghcr.io/malang-dev/microstack-kernel:amazon
