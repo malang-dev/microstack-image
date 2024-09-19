@@ -15,7 +15,7 @@ run-name: "Build Kernel ${{ github.event.inputs.KERNEL_VERSION }}"
 
 jobs:
   build:
-    name: Create release
+    name: Create kernel
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,17 +30,13 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
-
-      - name: "Change working directory to kernel"
-        working-directory: ./kernel
-        run: pwd
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./kernel/Dockerfile
           build-args: |
             KERNEL_VERSION=${{ github.event.inputs.KERNEL_VERSION }}
             KERNEL_CONFIG=https://raw.githubusercontent.com/firecracker-microvm/firecracker/main/resources/guest_configs/microvm-kernel-ci-x86_64-${{ github.event.inputs.KERNEL_VERSION }}.config
