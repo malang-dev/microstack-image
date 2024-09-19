@@ -18,7 +18,9 @@ RUN apt-get update -y && \
     ca-certificates     \
     kmod                \
     curl                \
-    wget
+    wget                \
+    python3             \
+    python3-pip
 
 ENV SRC_DIR=/usr/src           \
     DIST_DIR=/dist             \
