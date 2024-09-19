@@ -65,6 +65,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./kernel
-          file: Dockerfile.amazon
+          file: ./kernel/Dockerfile.amazon
           push: true
           tags: ghcr.io/malang-dev/microstack-kernel:amazon
