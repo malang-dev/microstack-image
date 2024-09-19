@@ -1,22 +1,21 @@
 name: Build Kernel
 
-on:
-  workflow_dispatch:
-    inputs:
-      KERNEL_VERSION:
-        type: choice
-        description: "Kernel version to build"
-        options:
-          - 6.1
-          - 5.10
-        required: true
+on: workflow_dispatch
 
-run-name: "Build Kernel ${{ github.event.inputs.KERNEL_VERSION }}"
+permissions:
+  packages: write
 
 jobs:
   build:
-    name: Create kernel
+    name: Build Kernel ${{ matrix.kernel.version }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        kernel:
+          - version: "6.1"
+            config: https://raw.githubusercontent.com/firecracker-microvm/firecracker/main/resources/guest_configs/microvm-kernel-ci-x86_64-6.1.config
+          - version: "5.10.199"
+            config: https://raw.githubusercontent.com/firecracker-microvm/firecracker/main/resources/guest_configs/microvm-kernel-ci-x86_64-5.10.config
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,9 +35,9 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v6
         with:
-          context: ./kernel/Dockerfile
+          context: ./kernel
           build-args: |
-            KERNEL_VERSION=${{ github.event.inputs.KERNEL_VERSION }}
-            KERNEL_CONFIG=https://raw.githubusercontent.com/firecracker-microvm/firecracker/main/resources/guest_configs/microvm-kernel-ci-x86_64-${{ github.event.inputs.KERNEL_VERSION }}.config
+            KERNEL_VERSION=${{ matrix.kernel.version }}
+            KERNEL_CONFIG=${{ matrix.kernel.config }}
           push: true
-          tags: malang-dev/microstack-kernel:${{ github.event.inputs.KERNEL_VERSION }}
+          tags: ghcr.io/malang-dev/microstack-kernel:${{ matrix.kernel.version }}
