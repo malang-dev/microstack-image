@@ -1,5 +1,6 @@
 ARG VERSION=22.04
 FROM ubuntu:${VERSION}
+LABEL org.opencontainers.image.source=https://github.com/malang-dev/microstack-image
 
 # udev is needed for booting a "real" VM, setting up the ttyS0 console properly
 # kmod is needed for modprobing modules
