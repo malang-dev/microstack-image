@@ -27,6 +27,9 @@ RUN apt-get update && apt-get install -y \
 RUN echo "" > /etc/machine-id && \
     echo "" > /var/lib/dbus/machine-id
 
+# Set dns resolver
+COPY resolv.conf /etc/resolv.conf
+
 # This container image doesn't have locales installed. Disable forwarding the
 # user locale env variables or we get warnings such as:
 #  bash: warning: setlocale: LC_ALL: cannot change locale
