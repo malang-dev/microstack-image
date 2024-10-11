@@ -67,5 +67,7 @@ RUN cp vmlinux /boot/vmlinux && \
     cp .config /boot/config-${KERNEL_VERSION}
 
 FROM scratch
+LABEL org.opencontainers.image.authors="MADIA <hello@malang.dev>"
 LABEL org.opencontainers.image.source=https://github.com/malang-dev/microstack-image
+
 COPY --from=builder /boot /boot
