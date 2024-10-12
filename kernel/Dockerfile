@@ -61,7 +61,7 @@ RUN ./scripts/config --file .config \
     --enable CONFIG_BRIDGE
 
 RUN make LOCALVERSION= olddefconfig
-RUN make LOCALVERSION= -j32
+RUN make LOCALVERSION= -j$(nproc)
 
 RUN cp vmlinux /boot/vmlinux && \
     cp .config /boot/config-${KERNEL_VERSION}
