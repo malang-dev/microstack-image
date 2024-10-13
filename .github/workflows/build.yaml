@@ -8,6 +8,8 @@ on:
         description: "Image type"
         required: true
         options:
+          - amazonlinux
+          - debian
           - ubuntu
         default: ubuntu
       version:
