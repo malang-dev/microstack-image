@@ -1,21 +1,23 @@
 name: Build Kernel
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build. List available versions at https://github.com/malang-dev/microstack-image/blob/master/kernel/config.json"
+        required: true
+        default: "5.10.199"
+
+run-name: "Build Kernel - ${{ inputs.version }}"
 
 permissions:
   packages: write
 
 jobs:
   build:
-    name: Build Kernel ${{ matrix.kernel.version }}
+    name: Build Kernel
+    if: github.event.inputs.version != 'amazon'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        kernel:
-          - version: "6.1"
-            config: https://raw.githubusercontent.com/firecracker-microvm/firecracker/main/resources/guest_configs/microvm-kernel-ci-x86_64-6.1.config
-          - version: "5.10.199"
-            config: https://raw.githubusercontent.com/firecracker-microvm/firecracker/afe0e5f6469f2d804643be0cc0cef53c9d1c4f5d/resources/guest_configs/microvm-kernel-ci-x86_64-5.10.config
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,19 +34,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get Kernel Config
+        id: kernel-config
+        run: |
+          URL=$(cat ./kernel/config.json | jq -r ".[] | select(.version == \"${{ inputs.version }}\") | .config_url")
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
       - name: Build
         uses: docker/build-push-action@v6
         with:
           context: ./kernel
           build-args: |
-            KERNEL_VERSION=${{ matrix.kernel.version }}
-            KERNEL_CONFIG=${{ matrix.kernel.config }}
+            KERNEL_VERSION=${{ inputs.version }}
+            KERNEL_CONFIG=${{ steps.kernel-config.outputs.url }}
           push: true
           provenance: false
-          tags: ghcr.io/malang-dev/microstack-kernel:${{ matrix.kernel.version }}
+          tags: ghcr.io/malang-dev/microstack-kernel:${{ inputs.version }}
 
   build-amazon:
     name: Build Kernel Amazon
+    if: github.event.inputs.version == 'amazon'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

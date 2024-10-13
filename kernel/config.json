@@ -1,0 +1,14 @@
+[
+  {
+    "version": "6.1",
+    "config_url": "https://raw.githubusercontent.com/firecracker-microvm/firecracker/main/resources/guest_configs/microvm-kernel-ci-x86_64-6.1.config"
+  },
+  {
+    "version": "5.10.199",
+    "config_url": "https://raw.githubusercontent.com/firecracker-microvm/firecracker/afe0e5f6469f2d804643be0cc0cef53c9d1c4f5d/resources/guest_configs/microvm-kernel-ci-x86_64-5.10.config"
+  },
+  {
+    "version": "5.10.226",
+    "config_url": "https://raw.githubusercontent.com/firecracker-microvm/firecracker/afe0e5f6469f2d804643be0cc0cef53c9d1c4f5d/resources/guest_configs/microvm-kernel-ci-x86_64-5.10.config"
+  }
+]
