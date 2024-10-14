@@ -34,7 +34,14 @@ RUN mkdir -p ${SRC_DIR} ${DIST_DIR} && \
 WORKDIR ${LINUX_DIR}
 RUN curl -L -o .config ${KERNEL_CONFIG}
 
-# Additional modules for kubernetes
+# Additional modules to allow kernel level ip configuration using boot argument
+RUN ./scripts/config --file .config \
+    --enable CONFIG_IP_PNP \
+    --enable CONFIG_IP_PNP_DHCP \
+    --enable CONFIG_IP_PNP_BOOTP \
+    --enable CONFIG_IP_PNP_RARP
+
+# Additional modules for kubernetes or docker
 RUN ./scripts/config --file .config \
     --enable CONFIG_NETFILTER \
     --enable CONFIG_NETFILTER_ADVANCED \
